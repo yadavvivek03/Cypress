@@ -56,26 +56,58 @@ describe("User Authentication Tests", () => {
         cy.xpath('//*[@id="tbodyid"]/div[2]/div/a').should('be.visible').click();  
         cy.wait(1000);  
 
-        let finalCount;
-        cy.log(finalCount);
-        cy.wait(2000);
-        cy.xpath('//*[@id="navbarExample"]/ul/li[4]/a').should('be.visible').click(); 
-        cy.wait(10000);
-        cy.get('#tbodyid').children().its('length').then(count => {
-            finalCount = count; 
-            cy.log(`Total number of children in #tbodyid: ${finalCount}`);   
-                cy.get('#totalp').invoke('text').then(text => {
-                    const finalPrice = text.split('\n')[0].trim(); 
-                    cy.log(`Intitialtotal Price: ${finalPrice}`);
-                }); 
+    let finalCount;
+    cy.log(finalCount);
+    cy.wait(2000);
+    cy.xpath('//*[@id="navbarExample"]/ul/li[4]/a').should('be.visible').click(); 
+    cy.wait(10000);
+    cy.get('#tbodyid').children().its('length').then(count => {
+        finalCount = count; 
+        cy.log(`Total number of children in #tbodyid: ${finalCount}`);   
+            cy.get('#totalp').invoke('text').then(text => {
+                const finalPrice = text.split('\n')[0].trim(); 
+                cy.log(`Intitialtotal Price: ${finalPrice}`);
+     
+
+            cy.get('[class="btn btn-success"]').click();  
+            cy.get('[id="name"]').type('ABC'); 
+            cy.wait(1000);
+            cy.get('[id="country"]').type('India');
+            cy.wait(1000);
+            cy.get('[id="city"]').type('Mumbai');
+            cy.wait(1000);
+            cy.get('[id="card"]').type('Axis');
+            cy.wait(1000);
+            cy.get('[id="month"]').type('September');
+            cy.wait(1000);
+            cy.get('[id="year"]').type('2019');
+            cy.wait(1000);
+            cy.xpath('//*[@id="orderModal"]/div/div/div[3]/button[2]').should('be.visible').click();  
+            cy.wait(1000);
+            cy.xpath('/html/body/div[10]/div[7]/div/button').should('be.visible').click();
         });
 
-        
-
-        
-
-        
+    }); 
 
 });
+
+        it("should fail login page with invalid credentials", () => {
+                cy.visit('/');
+                cy.title().should("eq", "STORE");  
+                cy.wait(3000); 
+                cy.get('[id="login2"]').should('be.visible').click();
+                cy.get('[id="loginusername"]').type('Inva');
+                cy.wait(3000);
+                cy.get('[id="loginpassword"]').type('InvalidPass');
+                cy.wait(3000);
+                cy.xpath('//*[@id="logInModal"]/div/div/div[3]/button[2]').click();
+                cy.xpath('//*[@id="logInModal"]/div/div/div[3]/button[1]').click();
+                cy.on('window:alert', (alertText) => {
+                expect(alertText).to.contains('User does not exist.');
+                cy.wait(5000);
+                
+        });
+ 
+    });
 
 });
